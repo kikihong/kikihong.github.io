@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="홍식이의 싸이월드 - 오늘의 경기도 날씨, 네이버 통합검색, 최신 연예인 뉴스 시작 홈페이지">
+  <title>홍식이의 싸이월드</title>
+  
+  <!-- Pretendard Font & FontAwesome Icons -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 최상단 네이버 글로벌 네비게이션 바 -->
+  <header class="portal-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <button class="menu-icon-btn" id="drawerToggleBtn" title="전체 서비스">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <nav class="service-nav">
+          <a href="https://mail.naver.com" target="_blank" rel="noopener noreferrer" class="service-link"><i class="fa-regular fa-envelope"></i> 메일</a>
+          <a href="https://section.cafe.naver.com" target="_blank" rel="noopener noreferrer" class="service-link"><i class="fa-solid fa-mug-hot"></i> 카페</a>
+          <a href="https://section.blog.naver.com" target="_blank" rel="noopener noreferrer" class="service-link"><i class="fa-solid fa-blog"></i> 블로그</a>
+          <a href="https://shopping.naver.com" target="_blank" rel="noopener noreferrer" class="service-link"><i class="fa-solid fa-bag-shopping"></i> 쇼핑</a>
+          <a href="https://news.naver.com" target="_blank" rel="noopener noreferrer" class="service-link active"><i class="fa-regular fa-newspaper"></i> 뉴스</a>
+          <a href="https://finance.naver.com" target="_blank" rel="noopener noreferrer" class="service-link">증권</a>
+          <a href="https://land.naver.com" target="_blank" rel="noopener noreferrer" class="service-link">부동산</a>
+          <a href="https://map.naver.com" target="_blank" rel="noopener noreferrer" class="service-link">지도</a>
+          <a href="https://comic.naver.com" target="_blank" rel="noopener noreferrer" class="service-link">웹툰</a>
+          <a href="https://chzzk.naver.com" target="_blank" rel="noopener noreferrer" class="service-link chzzk-link"><span class="chzzk-badge">LIVE</span> 치지직</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <!-- 실시간 한국 시각 표시 -->
+        <div class="live-clock-badge" id="liveClockBadge">
+          <i class="fa-regular fa-clock"></i>
+          <span id="currentDateText">2026.09.10 (목)</span>
+          <span id="currentTimeText" class="time-bold">13:00</span>
+        </div>
+
+        <!-- 다크/라이트 테마 토글 -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" title="테마 변경">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+
+        <!-- 브라우저 시작페이지 안내 / 설정 -->
+        <button class="header-btn" id="startPageGuideBtn" title="시작페이지 설정">
+          <i class="fa-solid fa-house"></i>
+          <span>시작페이지 설정</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="portal-main">
+    
+    <!-- 싸이월드 x 네이버 시그니처 검색 영역 -->
+    <section class="search-hero-section">
+      <div class="naver-logo-area">
+        <a href="#" class="naver-logo" title="홍식이의 싸이월드">
+          <span class="cyworld-badge-icon"><i class="fa-solid fa-heart-pulse"></i> Cyworld</span>
+          <span class="naver-logo-text cyworld-title-text">홍식이의 싸이월드</span>
+        </a>
+      </div>
+
+      <!-- 네이버 그린 검색 바 컨테이너 -->
+      <div class="search-bar-wrapper">
+        <form id="naverSearchForm" class="naver-search-box" action="https://search.naver.com/search.naver" method="GET" target="_blank">
+          <div class="search-input-box">
+            <input 
+              type="text" 
+              name="query" 
+              id="naverSearchInput" 
+              class="search-input" 
+              placeholder="네이버 검색어를 입력해 주세요." 
+              autocomplete="off"
+              autofocus
+            />
+            <button type="button" class="clear-btn" id="searchClearBtn" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="search-box-tools">
+            <button type="button" class="tool-btn" id="virtualKeyboardBtn" title="입력기">
+              <i class="fa-regular fa-keyboard"></i>
+            </button>
+            <button type="button" class="tool-btn" id="autocompleteToggleBtn" title="자동완성 레이어 펼치기">
+              <i class="fa-solid fa-chevron-down" id="autocompleteArrow"></i>
+            </button>
+            <button type="submit" class="search-submit-btn" id="searchSubmitBtn" title="네이버 검색">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- 자동완성 & 최근 검색어 드롭다운 레이어 -->
+        <div class="autocomplete-dropdown" id="autocompleteDropdown" style="display: none;">
+          <div class="autocomplete-header">
+            <div class="tab-btns">
+              <button type="button" class="dropdown-tab active" data-tab="recent">최근검색어</button>
+              <button type="button" class="dropdown-tab" data-tab="trending">인기검색어</button>
+            </div>
+            <button type="button" class="clear-all-btn" id="clearRecentBtn">전체삭제</button>
+          </div>
+          
+          <!-- 최근 검색어 목록 -->
+          <ul class="autocomplete-list" id="recentSearchesList">
+            <!-- 동적 렌더링 -->
+          </ul>
+
+          <!-- 추천/인기 검색어 목록 -->
+          <ul class="autocomplete-list" id="trendingSearchesList" style="display: none;">
+            <!-- 동적 렌더링 -->
+          </ul>
+
+          <div class="autocomplete-footer">
+            <span>네이버 통합검색 엔진 연동</span>
+            <button type="button" class="close-dropdown-btn" id="closeDropdownBtn">닫기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 실시간 핫 검색어 롤링 티커 -->
+      <div class="trending-ticker-bar">
+        <div class="ticker-label">
+          <i class="fa-solid fa-bolt"></i>
+          <span>실시간 이슈</span>
+        </div>
+        <div class="ticker-content" id="tickerSlider">
+          <span class="ticker-rank" id="tickerRank">1</span>
+          <a href="https://search.naver.com/search.naver?query=경기도+날씨" id="tickerKeyword" class="ticker-link" target="_blank">경기도 날씨 전망</a>
+          <span class="ticker-diff up"><i class="fa-solid fa-caret-up"></i> NEW</span>
+        </div>
+        <button type="button" class="ticker-more-btn" id="tickerMoreBtn" title="실시간 검색어 순위 전체보기">
+          <i class="fa-solid fa-list-ol"></i>
+        </button>
+
+        <!-- 실시간 검색어 1~10위 팝오버 -->
+        <div class="ranking-popover" id="rankingPopover" style="display: none;">
+          <div class="ranking-header">
+            <strong>실시간 트렌드 키워드 TOP 10</strong>
+            <span class="ranking-time" id="rankingUpdateTime">실시간 기준</span>
+          </div>
+          <ol class="ranking-list" id="rankingTop10List">
+            <!-- 동적 렌더링 -->
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 빠른 바로가기 북마크 바 (사용자 커스텀 가능) -->
+    <section class="quick-shortcuts-section">
+      <div class="shortcuts-grid" id="shortcutsGrid">
+        <!-- 동적 렌더링 + 추가 버튼 -->
+      </div>
+    </section>
+
+    <!-- 메인 2열 그리드 콘텐츠 영역 -->
+    <div class="portal-grid-layout">
+      
+      <!-- ============================================ -->
+      <!-- [좌측 메인 컬럼] 연예인 뉴스 (Entertainment) -->
+      <!-- ============================================ -->
+      <div class="main-column">
+        
+        <!-- 연예 뉴스 헤더 & 탭 -->
+        <section class="portal-card entertainment-news-card">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <span class="section-tag ent-tag">ENTERTAINMENT</span>
+              <h2 class="card-main-title"><i class="fa-solid fa-star star-icon"></i> 연예 뉴스</h2>
+              <span class="sub-caption">네이버 연예 실시간 헤드라인 & 포토</span>
+            </div>
+            <div class="card-actions">
+              <button type="button" class="refresh-news-btn" id="refreshNewsBtn" title="뉴스 새로고침">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+              <a href="https://entertain.naver.com" target="_blank" class="more-link" title="네이버 연예 바로가기">
+                더보기 <i class="fa-solid fa-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 연예 뉴스 카테고리 탭 -->
+          <div class="ent-category-tabs" id="entCategoryTabs">
+            <button type="button" class="ent-tab-btn active" data-category="all">전체</button>
+            <button type="button" class="ent-tab-btn" data-category="broadcast">TV/방송</button>
+            <button type="button" class="ent-tab-btn" data-category="music">가요/음반</button>
+            <button type="button" class="ent-tab-btn" data-category="movie">영화/OTT</button>
+            <button type="button" class="ent-tab-btn" data-category="photo">포토/화보</button>
+            <button type="button" class="ent-tab-btn" data-category="global">해외연예</button>
+          </div>
+
+          <!-- 연예 메인 핫이슈 헤드라인 슬라이더/피처드 -->
+          <div class="ent-featured-banner" id="entFeaturedBanner">
+            <!-- 자바스크립트로 동적 렌더링 -->
+          </div>
+
+          <!-- 연예 뉴스 기사 리스트 그리드 -->
+          <div class="ent-news-grid" id="entNewsGrid">
+            <!-- 자바스크립트로 동적 렌더링 -->
+          </div>
+        </section>
+
+        <!-- 연예인 포토 & 스타 톡 갤러리 섹션 -->
+        <section class="portal-card photo-gallery-card">
+          <div class="card-header-flex">
+            <div class="card-title-group">
+              <h3 class="card-sub-title"><i class="fa-solid fa-camera-retro"></i> 스타 포토 & 화보</h3>
+              <span class="sub-caption">오늘의 베스트 컷 & 레드카펫</span>
+            </div>
+            <span class="photo-badge">HD 화보</span>
+          </div>
+
+          <div class="star-photo-slider" id="starPhotoSlider">
+            <!-- 동적 렌더링 -->
+          </div>
+        </section>
+
+        <!-- 연예인 화제 랭킹 & 댓글 많은 뉴스 -->
+        <section class="portal-card ranking-news-card">
+          <div class="ranking-news-grid">
+            <div class="ranking-col">
+              <div class="mini-col-header">
+                <i class="fa-solid fa-fire hot-fire"></i>
+                <strong>가장 많이 본 연예 뉴스 TOP 5</strong>
+              </div>
+              <ul class="ranked-news-list" id="mostViewedNewsList">
+                <!-- 동적 렌더링 -->
+              </ul>
+            </div>
+            <div class="ranking-col">
+              <div class="mini-col-header">
+                <i class="fa-regular fa-comment-dots comment-icon"></i>
+                <strong>실시간 화제 스타 키워드</strong>
+              </div>
+              <div class="star-keyword-tags" id="starKeywordTags">
+                <!-- 동적 태그 렌더링 -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- [우측 사이드바 컬럼] 오늘의 날씨 [경기도] & 위젯 -->
+      <!-- ============================================ -->
+      <aside class="sidebar-column">
+        
+        <!-- 싸이월드 x 네이버 스타일 홍식이 프로필 카드 -->
+        <div class="portal-card user-account-card">
+          <div class="account-box-header">
+            <div class="user-profile-avatar cyworld-avatar">
+              <i class="fa-solid fa-face-smile"></i>
+            </div>
+            <div class="user-profile-info">
+              <div class="profile-name-row">
+                <strong class="user-name">홍식이</strong>
+                <span class="cyworld-minihome-tag"><i class="fa-solid fa-house-chimney"></i> 미니홈피</span>
+              </div>
+              <span class="user-greeting">사이좋은 사람들, 싸이월드 ♬ (BGM: Y)</span>
+            </div>
+          </div>
+          <div class="account-quick-stats">
+            <div class="stat-item">
+              <span class="stat-label">TODAY</span>
+              <strong class="stat-val pay-color">1,420</strong>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-label">도토리</span>
+              <strong class="stat-val alert-color">250 <small>개</small></strong>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-label">일촌평</span>
+              <strong class="stat-val" id="savedArticlesCount">18 <small>개</small></strong>
+            </div>
+          </div>
+          <div class="account-btns">
+            <a href="https://nid.naver.com/nidlogin.login" target="_blank" class="naver-login-btn cyworld-login-btn">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> 싸이월드 로그인
+            </a>
+          </div>
+        </div>
+
+        <!-- ⭐ [핵심 요구사항] 오늘의 날씨 [경기도] 위젯 ⭐ -->
+        <div class="portal-card weather-widget-card" id="gyeonggiWeatherCard">
+          <div class="weather-card-header">
+            <div class="weather-title-area">
+              <span class="gyeonggi-badge"><i class="fa-solid fa-location-dot"></i> 경기도</span>
+              <h2 class="weather-title">오늘의 날씨</h2>
+            </div>
+            
+            <!-- 경기도 시/군 선택 셀렉터 -->
+            <div class="location-select-wrapper">
+              <select id="gyeonggiCitySelect" class="gyeonggi-select" aria-label="경기도 지역 선택">
+                <option value="suwon" selected>수원시 팔달구</option>
+                <option value="seongnam">성남시 분당구</option>
+                <option value="goyang">고양시 일산동구</option>
+                <option value="yongin">용인시 수지구</option>
+                <option value="bucheon">부천시 원미구</option>
+                <option value="anyang">안양시 동안구</option>
+                <option value="hwaseong">화성시 동탄</option>
+                <option value="namyangju">남양주시 다산</option>
+                <option value="pyeongtaek">평택시 고덕</option>
+                <option value="uijeongbu">의정부시</option>
+                <option value="gimpo">김포시</option>
+                <option value="paju">파주시 운정</option>
+              </select>
+              <button type="button" class="weather-refresh-btn" id="weatherRefreshBtn" title="날씨 새로고침">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 메인 날씨 디스플레이 (기온, 상태, 체감) -->
+          <div class="weather-main-display">
+            <div class="weather-icon-temp-box">
+              <div class="weather-animated-icon" id="weatherIconDisplay">
+                <i class="fa-solid fa-sun weather-icon-sun"></i>
+              </div>
+              <div class="temp-text-group">
+                <div class="current-temp-wrap">
+                  <span class="current-temp" id="currentTemp">24</span>
+                  <span class="temp-unit">°C</span>
+                </div>
+                <div class="weather-desc" id="weatherConditionText">맑음</div>
+              </div>
+            </div>
+
+            <div class="weather-sub-summary">
+              <div class="summary-line">
+                <span class="feels-like">체감 <strong id="feelsLikeTemp">25.1°</strong></span>
+                <span class="temp-range">
+                  <span class="min-temp"><i class="fa-solid fa-arrow-down"></i> <span id="minTemp">18°</span></span>
+                  <span class="temp-sep">/</span>
+                  <span class="max-temp"><i class="fa-solid fa-arrow-up"></i> <span id="maxTemp">28°</span></span>
+                </span>
+              </div>
+              <div class="weather-alert-badge" id="weatherTipBadge">
+                <i class="fa-regular fa-face-smile"></i>
+                <span id="weatherTipText">야외 활동하기 아주 좋은 날씨예요</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 대기질 & 기상 세부 환경지수 (미세먼지, 초미세, 습도, 강수 등) -->
+          <div class="weather-env-grid">
+            <div class="env-item">
+              <span class="env-label">미세먼지</span>
+              <span class="env-status-badge status-good" id="dustBadge">
+                <i class="fa-solid fa-shield-halved"></i> <span id="dustVal">좋음 (18㎍)</span>
+              </span>
+            </div>
+            <div class="env-item">
+              <span class="env-label">초미세먼지</span>
+              <span class="env-status-badge status-good" id="ultraDustBadge">
+                <i class="fa-solid fa-leaf"></i> <span id="ultraDustVal">좋음 (8㎍)</span>
+              </span>
+            </div>
+            <div class="env-item">
+              <span class="env-label">습도</span>
+              <span class="env-value" id="humidityVal"><i class="fa-solid fa-droplet"></i> 52%</span>
+            </div>
+            <div class="env-item">
+              <span class="env-label">강수확률</span>
+              <span class="env-value" id="precipProbVal"><i class="fa-solid fa-umbrella"></i> 0%</span>
+            </div>
+            <div class="env-item">
+              <span class="env-label">풍속</span>
+              <span class="env-value" id="windVal"><i class="fa-solid fa-wind"></i> 1.8m/s</span>
+            </div>
+            <div class="env-item">
+              <span class="env-label">자외선</span>
+              <span class="env-value env-uv" id="uvVal"><i class="fa-regular fa-sun"></i> 보통</span>
+            </div>
+          </div>
+
+          <!-- 시간대별 경기도 날씨 예보 슬라이더 -->
+          <div class="hourly-forecast-section">
+            <div class="section-micro-title">
+              <span>시간대별 예보</span>
+              <span class="hourly-time-caption">오늘 / 내일</span>
+            </div>
+            <div class="hourly-slider" id="hourlyForecastSlider">
+              <!-- 동적 렌더링 -->
+            </div>
+          </div>
+
+          <!-- 경기도 주간 7일 날씨 예보 -->
+          <div class="weekly-forecast-section">
+            <div class="section-micro-title">
+              <span>주간 날씨 전망</span>
+              <span class="weekly-caption">경기도 전역</span>
+            </div>
+            <ul class="weekly-list" id="weeklyForecastList">
+              <!-- 동적 렌더링 -->
+            </ul>
+          </div>
+          
+          <div class="weather-footer-info">
+            <span>실시간 기상 데이터 연동 • 네이버 날씨 스타일</span>
+          </div>
+        </div>
+
+        <!-- 편의 도구 위젯 (환율, 증시) -->
+        <div class="portal-card mini-tools-card">
+          <div class="mini-tools-header">
+            <strong><i class="fa-solid fa-arrow-trend-up"></i> 오늘의 주요 증시 & 환율</strong>
+          </div>
+          <div class="finance-mini-ticker">
+            <div class="finance-item">
+              <span class="f-name">코스피</span>
+              <span class="f-val up">2,654.12 <i class="fa-solid fa-caret-up"></i> +0.82%</span>
+            </div>
+            <div class="finance-item">
+              <span class="f-name">코스닥</span>
+              <span class="f-val up">862.45 <i class="fa-solid fa-caret-up"></i> +0.45%</span>
+            </div>
+            <div class="finance-item">
+              <span class="f-name">USD/KRW</span>
+              <span class="f-val down">1,332.50 <i class="fa-solid fa-caret-down"></i> -3.20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 빠른 메모장 위젯 -->
+        <div class="portal-card quick-memo-card">
+          <div class="memo-header">
+            <strong><i class="fa-regular fa-note-sticky"></i> 오늘 할 일 & 메모</strong>
+            <button type="button" class="clear-memo-btn" id="clearMemoBtn" title="메모 지우기">비우기</button>
+          </div>
+          <textarea id="quickMemoInput" class="quick-memo-textarea" placeholder="간단한 메모나 검색할 키워드를 적어두세요. 자동 저장됩니다."></textarea>
+          <div class="memo-footer">
+            <span class="memo-save-status" id="memoSaveStatus">자동 저장됨</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- 바로가기 추가 모달 -->
+  <div class="modal-overlay" id="shortcutModal" style="display: none;">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>자주 찾는 바로가기 추가</h3>
+        <button type="button" class="modal-close-btn" id="closeShortcutModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="shortcutTitleInput">사이트 이름</label>
+          <input type="text" id="shortcutTitleInput" placeholder="예: 인스타그램, ChatGPT" maxlength="15">
+        </div>
+        <div class="form-group">
+          <label for="shortcutUrlInput">사이트 주소 (URL)</label>
+          <input type="url" id="shortcutUrlInput" placeholder="https://example.com">
+        </div>
+        <div class="form-group">
+          <label>아이콘 색상 테마</label>
+          <div class="color-picker-row" id="colorPickerRow">
+            <button type="button" class="color-dot active" data-color="#03C75A" style="background-color: #03C75A;"></button>
+            <button type="button" class="color-dot" data-color="#4285F4" style="background-color: #4285F4;"></button>
+            <button type="button" class="color-dot" data-color="#EA4335" style="background-color: #EA4335;"></button>
+            <button type="button" class="color-dot" data-color="#9333EA" style="background-color: #9333EA;"></button>
+            <button type="button" class="color-dot" data-color="#F59E0B" style="background-color: #F59E0B;"></button>
+            <button type="button" class="color-dot" data-color="#111827" style="background-color: #111827;"></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" id="cancelShortcutBtn">취소</button>
+        <button type="button" class="btn-confirm" id="saveShortcutBtn">추가하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 시작페이지 설정 안내 팝업 -->
+  <div class="modal-overlay" id="startPageGuideModal" style="display: none;">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-house"></i> 시작페이지 설정 방법</h3>
+        <button type="button" class="modal-close-btn" id="closeGuideModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body guide-body">
+        <div class="guide-step">
+          <span class="step-num">1</span>
+          <div>
+            <strong>현재 주소 복사</strong>
+            <p>브라우저 주소창의 URL을 복사(Ctrl+C / Cmd+C)합니다.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="step-num">2</span>
+          <div>
+            <strong>브라우저 설정 열기</strong>
+            <p>Chrome / Edge 설정 &gt; '시작 그룹' 또는 '시작할 때' 이동</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="step-num">3</span>
+          <div>
+            <strong>새 페이지 추가</strong>
+            <p>'특정 페이지 또는 페이지 모음 열기' 선택 후 복사한 주소를 붙여넣기하세요.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-confirm" id="confirmGuideBtn">확인했습니다</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 영역 -->
+  <footer class="portal-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="https://www.naver.com/rules/service.html" target="_blank">이용약관</a>
+        <a href="https://www.naver.com/rules/privacy.html" target="_blank" class="bold">개인정보처리방침</a>
+        <a href="https://help.naver.com" target="_blank">고객센터</a>
+        <a href="https://entertain.naver.com" target="_blank">네이버 연예 홈</a>
+        <a href="https://weather.naver.com" target="_blank">네이버 날씨 홈</a>
+      </div>
+      <div class="footer-copy">
+        <p>NAVER 스타일 커스텀 시작페이지 • HTML / CSS / JavaScript 기반</p>
+        <p class="copyright">Copyright © <strong>NAVER Corp. & Portal Starter</strong> All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 자바스크립트 로직 -->
+  <script src="app.js"></script>
+</body>
+</html>
