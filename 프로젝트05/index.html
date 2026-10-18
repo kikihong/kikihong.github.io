@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>우리의 빛나던 시절, 다시 만나는 날 | 2026 동창회 초대장</title>
+
+  <!-- SEO & 메타 태그 -->
+  <meta name="description" content="그리운 친구들아, 함께했던 그 시절을 추억하며 창경궁에서 만나요. 2026 동창회에 여러분을 초대합니다.">
+  <meta property="og:title" content="2026 동창회 초대장 - 우리 다시 만나는 날">
+  <meta property="og:description" content="창경궁에서 함께하는 특별한 동창회! 소중한 추억을 나누러 오세요.">
+  <meta property="og:image" content="img/봄소풍.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- 웹폰트: Pretendard & Gowun Batang (감성 폰트) -->
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome 아이콘 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Leaflet 지도 라이브러리 (정확한 300x300 창경궁 지도 렌더링 지원) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- 메인 스타일시트 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- 은은한 꽃잎/빛망울 파티클 배경 캔버스 -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- 모바일 뷰 컨테이너 -->
+  <div class="mobile-wrapper" id="app">
+
+    <!-- 상단 플로팅 컨트롤 (BGM 토글, 공유 버튼) -->
+    <header class="floating-header">
+      <button id="bgm-toggle-btn" class="icon-circle-btn" aria-label="배경음악 켜기/끄기" title="배경음악 재생/정지">
+        <i class="fa-solid fa-music"></i>
+        <span class="music-note-wave"></span>
+      </button>
+      <button id="quick-share-btn" class="icon-circle-btn" aria-label="초대장 공유" title="초대장 공유">
+        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+      </button>
+    </header>
+
+    <!-- 1. 메인 히어로 섹션 -->
+    <section class="hero-section" id="hero">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> 2026 REUNION INVITATION
+      </div>
+
+      <p class="hero-sub-korean">그리운 벗들에게 보내는 편지</p>
+      <h1 class="hero-title">우리들의 찬란했던 날들,<br><span class="gradient-text">다시 만나는 시간</span></h1>
+
+      <div class="hero-card">
+        <div class="hero-card-inner">
+          <div class="hero-img-wrap">
+            <img src="img/봄소풍.jpg" alt="그 시절 추억 사진" class="hero-main-img">
+            <div class="hero-overlay"></div>
+          </div>
+          <div class="hero-info">
+            <div class="info-tag"><i class="fa-regular fa-calendar-check"></i> 2026. 10. 24. SAT PM 5:00</div>
+            <div class="info-place"><i class="fa-solid fa-location-dot"></i> 서울 창경궁 일대 및 연회홀</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">
+        <span>초대장 아래로 펼쳐보기</span>
+        <i class="fa-solid fa-chevron-down bounce"></i>
+      </div>
+    </section>
+
+    <!-- 2. 초대 인사말 섹션 -->
+    <section class="section invitation-section" id="letter">
+      <div class="section-badge">INVITATION</div>
+      <h2 class="section-title">친구야, 보고 싶다!</h2>
+      <div class="divider"><span class="divider-icon">❦</span></div>
+
+      <div class="letter-card">
+        <p class="letter-paragraph">
+          교복을 입고 함께 웃고 떠들며<br>
+          꿈을 키워가던 그 시절이<br>
+          어느덧 아득한 추억이 되었습니다.
+        </p>
+        <p class="letter-paragraph highlight">
+          각자의 자리에서 치열하게 살아온 우리,<br>
+          잠시 짐을 내려놓고<br>
+          순수했던 그 시절로 돌아가 보려 합니다.
+        </p>
+        <p class="letter-paragraph">
+          서로의 눈가에 번진 주름조차<br>
+          반가운 이야기꽃이 될 그날,<br>
+          <strong>그리운 너의 목소리와 웃는 얼굴</strong>을 기다립니다.
+        </p>
+        <div class="letter-sign">
+          <span>2026년 가을날</span>
+          <strong>동창회 준비위원회 일동 올림</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. [사진섹션] 추억 갤러리 슬라이더 -->
+    <section class="section gallery-section" id="gallery-section">
+      <div class="section-badge">MEMORIES</div>
+      <h2 class="section-title">그 시절, 우리들의 추억</h2>
+      <p class="section-subtitle">사진을 좌우로 넘겨 추억을 감상해보세요</p>
+      <div class="divider"><span class="divider-icon">📷</span></div>
+
+      <!-- 슬라이더 컨테이너 -->
+      <div class="slider-container" id="photo-slider">
+        <div class="slider-track" id="slider-track">
+
+          <!-- 슬라이드 1 : 입학 -->
+          <div class="slide-item active" data-index="0">
+            <div class="slide-card">
+              <div class="slide-img-box" onclick="openLightbox(0)">
+                <img src="img/입학.jpg" alt="설레던 입학식" loading="lazy">
+                <div class="zoom-badge"><i class="fa-solid fa-expand"></i> 확대보기</div>
+              </div>
+              <div class="slide-caption">
+                <span class="slide-tag">01. 설레임의 시작</span>
+                <h3 class="slide-title">새로운 시작, 풋풋했던 입학식</h3>
+                <p class="slide-desc">모든 것이 낯설고 설레었던 첫 만남의 순간</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 슬라이드 2 : 봄소풍 -->
+          <div class="slide-item" data-index="1">
+            <div class="slide-card">
+              <div class="slide-img-box" onclick="openLightbox(1)">
+                <img src="img/봄소풍.jpg" alt="따사로운 봄소풍" loading="lazy">
+                <div class="zoom-badge"><i class="fa-solid fa-expand"></i> 확대보기</div>
+              </div>
+              <div class="slide-caption">
+                <span class="slide-tag">02. 푸르른 청춘</span>
+                <h3 class="slide-title">웃음꽃 가득했던 봄소풍</h3>
+                <p class="slide-desc">도시락 나눠먹으며 잔디밭을 뛰놀던 찬란한 봄날</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 슬라이드 3 : 장기자랑 -->
+          <div class="slide-item" data-index="2">
+            <div class="slide-card">
+              <div class="slide-img-box" onclick="openLightbox(2)">
+                <img src="img/장기자랑.jpg" alt="열정 넘치던 장기자랑" loading="lazy">
+                <div class="zoom-badge"><i class="fa-solid fa-expand"></i> 확대보기</div>
+              </div>
+              <div class="slide-caption">
+                <span class="slide-tag">03. 뜨거웠던 열기</span>
+                <h3 class="slide-title">우리 모두가 주인공, 장기자랑</h3>
+                <p class="slide-desc">함께 목청껏 환호하고 무대를 빛내던 뜨거운 열정</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 슬라이드 4 : 졸업 -->
+          <div class="slide-item" data-index="3">
+            <div class="slide-card">
+              <div class="slide-img-box" onclick="openLightbox(3)">
+                <img src="img/졸업.jpg" alt="빛나는 졸업식" loading="lazy">
+                <div class="zoom-badge"><i class="fa-solid fa-expand"></i> 확대보기</div>
+              </div>
+              <div class="slide-caption">
+                <span class="slide-tag">04. 아름다운 매듭</span>
+                <h3 class="slide-title">눈물과 감동의 졸업식</h3>
+                <p class="slide-desc">더 큰 세상으로 나아가며 훗날을 기약하던 그날</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 슬라이더 컨트롤 버튼 (이전 / 다음) -->
+        <button class="slider-arrow prev-btn" id="prev-btn" aria-label="이전 사진">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-arrow next-btn" id="next-btn" aria-label="다음 사진">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- 인디케이터 도트 -->
+        <div class="slider-dots" id="slider-dots">
+          <span class="dot active" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+          <span class="dot" data-index="3"></span>
+        </div>
+
+        <!-- 슬라이더 재생/일시정지 토글 -->
+        <div class="slider-play-status">
+          <button id="slider-play-toggle" class="play-toggle-btn" title="자동 슬라이드 일시정지/재생">
+            <i class="fa-solid fa-pause"></i> <span id="play-status-text">자동 재생 중</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. [카운트다운 섹션] 실시간 카운트다운 -->
+    <section class="section countdown-section" id="countdown-section">
+      <div class="section-badge">COUNTDOWN</div>
+      <h2 class="section-title">동창회까지 남은 시간</h2>
+      <p class="section-subtitle">2026년 10월 24일(토) 17:00</p>
+      <div class="divider"><span class="divider-icon">⏳</span></div>
+
+      <!-- 실시간 카운트다운 타이머 박스 -->
+      <div class="countdown-card">
+        <div class="d-day-badge" id="d-day-display">D-29</div>
+
+        <div class="timer-grid">
+          <div class="timer-unit">
+            <div class="digit-box" id="days-box">
+              <span class="digit-val" id="days">00</span>
+            </div>
+            <span class="unit-label">DAYS</span>
+          </div>
+          <span class="timer-colon">:</span>
+
+          <div class="timer-unit">
+            <div class="digit-box" id="hours-box">
+              <span class="digit-val" id="hours">00</span>
+            </div>
+            <span class="unit-label">HOURS</span>
+          </div>
+          <span class="timer-colon">:</span>
+
+          <div class="timer-unit">
+            <div class="digit-box" id="mins-box">
+              <span class="digit-val" id="minutes">00</span>
+            </div>
+            <span class="unit-label">MINS</span>
+          </div>
+          <span class="timer-colon">:</span>
+
+          <div class="timer-unit">
+            <div class="digit-box pulse" id="secs-box">
+              <span class="digit-val" id="seconds">00</span>
+            </div>
+            <span class="unit-label">SECS</span>
+          </div>
+        </div>
+
+        <p class="countdown-msg" id="countdown-msg">설레는 만남의 날까지 초 단위로 세고 있어요!</p>
+
+        <!-- 캘린더 등록 버튼 -->
+        <div class="calendar-btn-wrap">
+          <button class="btn-subtle" id="add-to-cal-btn">
+            <i class="fa-regular fa-calendar-plus"></i> 내 캘린더에 일정 추가
+          </button>
+        </div>
+      </div>
+
+      <!-- 월간 미니 달력 -->
+      <div class="mini-calendar-box">
+        <div class="calendar-header">
+          <span><i class="fa-solid fa-calendar-days"></i> 2026년 10월</span>
+        </div>
+        <div class="calendar-grid">
+          <div class="cal-day-name sun">일</div>
+          <div class="cal-day-name">월</div>
+          <div class="cal-day-name">화</div>
+          <div class="cal-day-name">수</div>
+          <div class="cal-day-name">목</div>
+          <div class="cal-day-name">금</div>
+          <div class="cal-day-name sat">토</div>
+
+          <!-- 2026년 10월 1일은 목요일 -->
+          <div class="cal-date empty"></div>
+          <div class="cal-date empty"></div>
+          <div class="cal-date empty"></div>
+          <div class="cal-date empty"></div>
+          <div class="cal-date">1</div>
+          <div class="cal-date">2</div>
+          <div class="cal-date sat">3</div>
+
+          <div class="cal-date sun">4</div>
+          <div class="cal-date">5</div>
+          <div class="cal-date">6</div>
+          <div class="cal-date">7</div>
+          <div class="cal-date">8</div>
+          <div class="cal-date">9</div>
+          <div class="cal-date sat">10</div>
+
+          <div class="cal-date sun">11</div>
+          <div class="cal-date">12</div>
+          <div class="cal-date">13</div>
+          <div class="cal-date">14</div>
+          <div class="cal-date">15</div>
+          <div class="cal-date">16</div>
+          <div class="cal-date sat">17</div>
+
+          <div class="cal-date sun">18</div>
+          <div class="cal-date">19</div>
+          <div class="cal-date">20</div>
+          <div class="cal-date">21</div>
+          <div class="cal-date">22</div>
+          <div class="cal-date">23</div>
+          <div class="cal-date sat event-day" title="동창회 당일!">
+            <span>24</span>
+            <span class="event-marker">D-DAY</span>
+          </div>
+
+          <div class="cal-date sun">25</div>
+          <div class="cal-date">26</div>
+          <div class="cal-date">27</div>
+          <div class="cal-date">28</div>
+          <div class="cal-date">29</div>
+          <div class="cal-date">30</div>
+          <div class="cal-date sat">31</div>
+        </div>
+        <p class="cal-desc">✨ <strong>10월 24일 토요일 17시</strong>에 창경궁에서 만나요!</p>
+      </div>
+    </section>
+
+    <!-- 5. 행사 세부 정보 안내 -->
+    <section class="section event-info-section">
+      <div class="section-badge">PROGRAM</div>
+      <h2 class="section-title">행사 일정 안내</h2>
+      <div class="divider"><span class="divider-icon">✨</span></div>
+
+      <div class="timeline-box">
+        <div class="timeline-item">
+          <div class="time-badge">16:30 ~ 17:00</div>
+          <div class="time-content">
+            <h4>반가운 맞이 & 등록</h4>
+            <p>창경궁 홍화문 앞 집결 및 기념 네임택 증정</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="time-badge">17:00 ~ 18:00</div>
+          <div class="time-content">
+            <h4>창경궁 달빛 산책 & 단체 사진</h4>
+            <p>고궁의 가을 정취를 만끽하며 추억의 단체 기념촬영</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="time-badge">18:00 ~ 20:30</div>
+          <div class="time-content">
+            <h4>만찬 & 추억의 퀴즈/장기자랑</h4>
+            <p>맛있는 저녁 식사와 함께하는 레크리에이션 & 경품 추첨</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="time-badge">20:30 ~</div>
+          <div class="time-content">
+            <h4>자유 뒤풀이 & 담소</h4>
+            <p>못다 한 이야기를 나누는 정겨운 시간</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. [지도섹션] 네이버 위치 지도 (300×300픽셀) -->
+    <section class="section map-section" id="map-section">
+      <div class="section-badge">LOCATION</div>
+      <h2 class="section-title">오시는 길</h2>
+      <p class="section-subtitle">서울 종로구 창경궁로 185 (창경궁)</p>
+      <div class="divider"><span class="divider-icon">📍</span></div>
+
+      <div class="map-card-wrapper">
+        <!-- 네이버 지도 브랜드 헤더 -->
+        <div class="naver-map-header">
+          <div class="naver-brand">
+            <span class="naver-logo">N</span>
+            <span class="naver-title">네이버 지도</span>
+          </div>
+          <div class="map-place-tag">
+            <i class="fa-solid fa-landmark"></i> 창경궁
+          </div>
+        </div>
+
+        <!-- 정확한 300x300 픽셀 지도 프레임 컨테이너 -->
+        <div class="map-fixed-300-container" id="naver-map-300-container">
+          <div id="naver-custom-map" class="map-300x300" style="width: 300px; height: 300px;"></div>
+
+          <!-- 지도 위 오버레이 커스텀 컨트롤 / 핀 안내 -->
+          <div class="map-pin-overlay">
+            <div class="custom-marker-chip">
+              <span class="pin-dot"></span>
+              <strong>창경궁</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 장소 세부 정보 & 네이버 지도 연결 버튼 -->
+        <div class="map-details">
+          <div class="address-box">
+            <div class="address-text">
+              <span class="addr-label">도로명</span>
+              <span id="copy-address-text">서울특별시 종로구 창경궁로 185</span>
+            </div>
+            <button class="btn-copy" id="copy-addr-btn" title="주소 복사">
+              <i class="fa-regular fa-copy"></i> 복사
+            </button>
+          </div>
+
+          <!-- 네이버 지도 바로가기 액션 버튼 그룹 -->
+          <div class="map-action-grid">
+            <a href="https://map.naver.com/p/search/%EC%B0%BD%EA%B2%BD%EA%B6%81" target="_blank"
+              rel="noopener noreferrer" class="btn-map-action naver-btn">
+              <span class="btn-n-icon">N</span> 네이버 지도로 보기
+            </a>
+            <a href="https://map.naver.com/p/directions/-/-/%EC%B0%BD%EA%B2%BD%EA%B6%81,12140513,PLACE_POI/-/car?c=15.00,0,0,0,dh"
+              target="_blank" rel="noopener noreferrer" class="btn-map-action route-btn">
+              <i class="fa-solid fa-diamond-turn-right"></i> 네이버 빠른 길찾기
+            </a>
+          </div>
+
+          <!-- 내비게이션 앱 바로가기 버튼들 -->
+          <div class="navi-app-links">
+            <span class="navi-title">내비게이션 바로 연결</span>
+            <div class="navi-btns">
+              <a href="https://map.naver.com/p/search/%EC%B0%BD%EA%B2%BD%EA%B6%81" target="_blank"
+                class="navi-chip naver-chip">
+                <i class="fa-solid fa-location-arrow"></i> 네이버지도
+              </a>
+              <a href="https://kakaonavi.wguide.com/" target="_blank" class="navi-chip kakao-chip">
+                <i class="fa-solid fa-car-side"></i> 카카오내비
+              </a>
+              <a href="https://www.tmap.co.kr/" target="_blank" class="navi-chip tmap-chip">
+                <i class="fa-solid fa-route"></i> TMAP
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 대중교통 안내 -->
+        <div class="traffic-info">
+          <div class="traffic-item">
+            <div class="traffic-icon subway"><i class="fa-solid fa-train-subway"></i></div>
+            <div class="traffic-text">
+              <strong>지하철 이용 시</strong>
+              <p>• 4호선 혜화역 4번 출구 (도보 약 10~12분)</p>
+              <p>• 1호선 종로5가역 2번 출구 (도보 약 15분 또는 버스 환승)</p>
+            </div>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-icon bus"><i class="fa-solid fa-bus"></i></div>
+            <div class="traffic-text">
+              <strong>버스 이용 시</strong>
+              <p>• '창경궁·서울대학교병원' 정류장 하차</p>
+              <p>• 간선 100, 102, 104, 106, 107, 140, 150, 151, 160</p>
+            </div>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-icon parking"><i class="fa-solid fa-square-parking"></i></div>
+            <div class="traffic-text">
+              <strong>주차 안내</strong>
+              <p>• 창경궁 공영 주차장 (유료) 및 인근 유료 주차장 이용</p>
+              <p>• 주말은 혼잡하오니 대중교통 이용을 권장합니다.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. 참석 여부 확인 (RSVP) -->
+    <section class="section rsvp-section">
+      <div class="section-badge">RSVP</div>
+      <h2 class="section-title">참석 여부 알리기</h2>
+      <p class="section-subtitle">원활한 행사 준비를 위해 참석 여부를 남겨주세요</p>
+      <div class="divider"><span class="divider-icon">💌</span></div>
+
+      <div class="rsvp-card">
+        <form id="rsvp-form" onsubmit="handleRSVPSubmit(event)">
+          <div class="form-group">
+            <label for="rsvp-name">이름 (동창 이름)</label>
+            <input type="text" id="rsvp-name" placeholder="예: 홍길동 (3학년 2반)" required>
+          </div>
+          <div class="form-group">
+            <label for="rsvp-phone">연락처</label>
+            <input type="tel" id="rsvp-phone" placeholder="예: 010-1234-5678" required>
+          </div>
+          <div class="form-group">
+            <label>참석 여부</label>
+            <div class="radio-selector">
+              <label class="radio-label">
+                <input type="radio" name="attendance" value="attend" checked>
+                <span class="custom-radio"></span>
+                <span>참석합니다 🎉</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="attendance" value="undecided">
+                <span class="custom-radio"></span>
+                <span>미정 / 고민중 🤔</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="attendance" value="absent">
+                <span class="custom-radio"></span>
+                <span>아쉽지만 불참 😢</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rsvp-memo">동반 인원 및 전하고 싶은 말</label>
+            <input type="text" id="rsvp-memo" placeholder="예: 동반 1명 / 오랜만에 기대된다!">
+          </div>
+          <button type="submit" class="btn-primary-large">
+            <i class="fa-solid fa-paper-plane"></i> 참석 의사 제출하기
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 8. 친구들에게 남기는 한마디 (방명록) -->
+    <section class="section guestbook-section">
+      <div class="section-badge">GUESTBOOK</div>
+      <h2 class="section-title">친구들에게 한마디</h2>
+      <p class="section-subtitle">그리운 친구들에게 따뜻한 응원의 메시지를 남겨보세요</p>
+      <div class="divider"><span class="divider-icon">💬</span></div>
+
+      <div class="guestbook-form-card">
+        <form id="guestbook-form" onsubmit="handleGuestbookSubmit(event)">
+          <div class="gb-input-row">
+            <input type="text" id="gb-author" placeholder="작성자 이름 (예: 김철수)" required maxlength="12">
+            <input type="password" id="gb-pwd" placeholder="비번(삭제용)" required maxlength="6">
+          </div>
+          <textarea id="gb-content" rows="3" placeholder="친구들에게 전하고 싶은 따뜻한 한마디를 적어주세요!" required
+            maxlength="150"></textarea>
+          <div class="gb-bottom-row">
+            <span class="char-counter" id="gb-char-counter">0 / 150</span>
+            <button type="submit" class="btn-submit-comment">
+              <i class="fa-solid fa-pen"></i> 등록하기
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- 방명록 글 목록 -->
+      <div class="guestbook-list" id="guestbook-list">
+        <!-- JS로 동적 렌더링 -->
+      </div>
+    </section>
+
+    <!-- 9. 문의 및 공유하기 -->
+    <section class="section contact-section">
+      <div class="section-badge">CONTACT</div>
+      <h2 class="section-title">동창회 문의</h2>
+      <div class="divider"><span class="divider-icon">📞</span></div>
+
+      <div class="contact-cards">
+        <div class="contact-item">
+          <div class="contact-info">
+            <span class="contact-role">총무</span>
+            <strong>김동창</strong>
+            <span class="contact-phone">010-9876-5432</span>
+          </div>
+          <div class="contact-actions">
+            <a href="tel:010-9876-5432" class="call-btn" title="전화 걸기"><i class="fa-solid fa-phone"></i></a>
+            <a href="sms:010-9876-5432" class="sms-btn" title="문자 보내기"><i class="fa-solid fa-message"></i></a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-info">
+            <span class="contact-role">회장</span>
+            <strong>이모임</strong>
+            <span class="contact-phone">010-1234-5678</span>
+          </div>
+          <div class="contact-actions">
+            <a href="tel:010-1234-5678" class="call-btn" title="전화 걸기"><i class="fa-solid fa-phone"></i></a>
+            <a href="sms:010-1234-5678" class="sms-btn" title="문자 보내기"><i class="fa-solid fa-message"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-box">
+        <h3>초대장 링크 공유하기</h3>
+        <p>함께할 동창 친구들에게 초대장을 전달해주세요</p>
+        <div class="share-btn-group">
+          <button class="share-btn kakao" id="share-kakao-btn">
+            <i class="fa-solid fa-comment"></i> 카카오톡 공유
+          </button>
+          <button class="share-btn copy-url" id="copy-url-btn">
+            <i class="fa-solid fa-link"></i> 링크 복사
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="app-footer">
+      <p class="footer-quote">"우리가 함께했던 모든 순간이 찬란한 봄날이었습니다."</p>
+      <p class="copyright">© 2026 동창회 준비위원회. All Rights Reserved.</p>
+    </footer>
+
+  </div> <!-- /mobile-wrapper -->
+
+  <!-- 라이트박스 팝업 모달 (사진 확대) -->
+  <div class="lightbox-modal" id="lightbox-modal">
+    <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightbox()" aria-label="닫기">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="확대된 사진">
+      </div>
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+      <div class="lightbox-nav">
+        <button class="lb-nav-btn prev" onclick="navigateLightbox(-1)" aria-label="이전"><i
+            class="fa-solid fa-chevron-left"></i></button>
+        <span class="lb-counter" id="lb-counter">1 / 4</span>
+        <button class="lb-nav-btn next" onclick="navigateLightbox(1)" aria-label="다음"><i
+            class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 메시지 UI -->
+  <div class="toast-container" id="toast">
+    <i class="fa-solid fa-circle-check toast-icon"></i>
+    <span id="toast-msg">복사되었습니다!</span>
+  </div>
+
+  <!-- BGM 오디오 엘리먼트 (Web Audio API 기반 앰비언트 / 감성 멜로디 지원) -->
+  <audio id="bgm-audio" loop preload="none">
+    <!-- 폴백 음원 연결 (Web Audio 신디사이저로 생성된 감성 피아노 멜로디 기본 재생 지원) -->
+  </audio>
+
+  <!-- 메인 스크립트 -->
+  <script src="js/app.js"></script>
+</body>
+
+</html>
