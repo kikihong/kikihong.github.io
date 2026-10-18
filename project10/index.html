@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>RoutinePulse - 시퀀스 운동 루틴 & 인터벌 타이머</title>
+  <meta name="description" content="네온 스포츠 다크 테마 기반 맞춤형 인터벌 & 타바타 운동 시퀀스 타이머. 루틴 보관함 및 모바일 바닥 거치 최적화.">
+  <meta name="theme-color" content="#06090e">
+  
+  <!-- Google Fonts: Chakra Petch (Sporty Digital Display), Outfit, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700;800&family=JetBrains+Mono:wght@700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-state="idle">
+  <!-- Dynamic Ambient Glow Backdrop -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Top App Navigation -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="logo-title-row">
+            <span class="logo-title">RoutinePulse</span>
+            <span class="sport-badge">PRO</span>
+          </div>
+          <span class="logo-sub">Smart Sequence Timer</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions Header -->
+      <div class="header-actions">
+        <!-- Routine Vault / Library Button -->
+        <button id="openLibraryBtn" class="btn btn-secondary btn-sm highlight-hover" title="내 루틴 보관함" aria-label="루틴 보관함">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+            <path d="M6 6h10"></path>
+            <path d="M6 10h10"></path>
+          </svg>
+          <span class="btn-text-responsive">루틴 보관함</span>
+        </button>
+
+        <!-- Save Routine Button -->
+        <button id="openSaveModalBtn" class="btn btn-sport-neon btn-sm" title="현재 루틴을 보관함에 저장" aria-label="루틴 저장">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span class="btn-text-responsive">루틴 저장</span>
+        </button>
+
+        <!-- Sound Toggle Button -->
+        <button id="soundToggleBtn" class="btn btn-icon" title="소리 켜기/끄기 (단축키: M)" aria-label="사운드 설정">
+          <svg id="soundOnIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg id="soundOffIcon" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+
+        <!-- Fullscreen Button -->
+        <button id="fullscreenBtn" class="btn btn-icon" title="전체화면" aria-label="전체화면 전환">
+          <svg id="fullscreenIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Grid: Display Section + Stage Builder -->
+    <main class="main-layout">
+      <!-- LEFT / TOP: Visual Stage Display & Controls -->
+      <section class="display-section card" aria-label="운동 진행 디스플레이">
+        <!-- Global Sequence Progress Bar -->
+        <div class="routine-progress-wrapper">
+          <div class="routine-meta">
+            <span id="stageIndicator" class="badge badge-stage">STAGE 1 / 1</span>
+            <span id="currentRoutineTitleTag" class="current-routine-title-tag">기본 루틴</span>
+            <span id="totalTimeEstimate" class="meta-time">총 00:00</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="totalProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Stage Info Banner -->
+        <div class="current-exercise-banner">
+          <div class="status-badge-row">
+            <span id="statusBadge" class="status-badge status-idle">준비 대기</span>
+            <span id="typeBadge" class="badge badge-type">카운트다운</span>
+          </div>
+          <h1 id="currentExerciseName" class="exercise-title">운동을 시작해보세요</h1>
+        </div>
+
+        <!-- Colossal Circular Progress Timer -->
+        <div class="timer-dial-container">
+          <svg class="timer-dial-svg" viewBox="0 0 340 340">
+            <!-- Background track circle -->
+            <circle class="dial-track" cx="170" cy="170" r="148"></circle>
+            <!-- Animated progress ring -->
+            <circle id="dialProgress" class="dial-progress" cx="170" cy="170" r="148"></circle>
+          </svg>
+
+          <!-- Dial Center Contents -->
+          <div class="dial-inner">
+            <div id="subTimerLabel" class="dial-sub-label">남은 시간</div>
+            <div id="timerDigits" class="dial-digits">00:00</div>
+            <div class="dial-round-pill">
+              <span class="round-prefix">ROUND</span>
+              <span id="roundIndicator" class="round-count">1 / 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEXT Exercise Preview Card -->
+        <div class="next-preview-card" id="nextPreview">
+          <div class="next-label-pill">NEXT</div>
+          <div class="next-content">
+            <span id="nextExerciseName" class="next-name">다음 운동 없음</span>
+            <span id="nextExerciseMeta" class="next-meta">-</span>
+          </div>
+          <div class="next-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Primary Control Toolbar -->
+        <div class="control-toolbar">
+          <!-- Previous Step -->
+          <button id="prevBtn" class="btn btn-control btn-secondary" title="이전 단계" aria-label="이전">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="19 20 9 12 19 4 19 20"></polygon>
+              <line x1="5" y1="19" x2="5" y2="5"></line>
+            </svg>
+          </button>
+
+          <!-- Play / Pause Main Action -->
+          <button id="mainActionBtn" class="btn btn-control btn-play" title="시작 / 일시정지 (Space)" aria-label="시작">
+            <span id="playIcon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </span>
+            <span id="pauseIcon" class="hidden">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+              </svg>
+            </span>
+            <span id="mainActionText" class="btn-text">시작</span>
+          </button>
+
+          <!-- Skip / Next Step -->
+          <button id="skipBtn" class="btn btn-control btn-secondary" title="다음 단계로 건너뛰기" aria-label="다음 단계">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 4 15 12 5 20 5 4"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19"></line>
+            </svg>
+          </button>
+
+          <!-- Reset -->
+          <button id="resetBtn" class="btn btn-control btn-secondary" title="루틴 처음으로 초기화 (R)" aria-label="초기화">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="shortcut-hints">
+          <span><kbd>Space</kbd> 시작/정지</span>
+          <span><kbd>R</kbd> 초기화</span>
+          <span><kbd>M</kbd> 음소거</span>
+        </div>
+      </section>
+
+      <!-- RIGHT / BOTTOM: Stage Builder Section -->
+      <section class="builder-section card" aria-label="운동 스테이지 구성">
+        <div class="builder-header">
+          <div class="builder-title-group">
+            <h2 class="section-title">루틴 스테이지 구성</h2>
+            <span id="stageCountBadge" class="count-pill">3개 단계</span>
+          </div>
+
+          <!-- Add Stage Button -->
+          <div class="add-stage-group">
+            <button id="addStageBtn" class="btn btn-primary btn-sm" aria-label="새 단계 추가">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>단계 추가</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Presets Bar -->
+        <div class="presets-quick-bar">
+          <span class="quick-preset-label">⚡ 빠른 프리셋:</span>
+          <div class="quick-preset-tags">
+            <button class="preset-chip" data-preset="tabata">🔥 4분 타바타</button>
+            <button class="preset-chip" data-preset="core">🧘 코어 3단계</button>
+            <button class="preset-chip" data-preset="hiit">⚡ 10분 HIIT</button>
+            <button class="preset-chip" data-preset="stretch">🌿 스트레칭</button>
+          </div>
+        </div>
+
+        <!-- Stages List Container -->
+        <div id="stagesList" class="stages-list">
+          <!-- Dynamically populated stage cards -->
+        </div>
+
+        <div class="builder-footer">
+          <button id="clearAllStagesBtn" class="btn btn-outline-danger btn-xs">
+            전체 비우기
+          </button>
+          <span class="auto-save-note">✨ 변경사항은 브라우저에 실시간 동기화됩니다</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL 1: Stage Type Selection Modal -->
+    <div id="typeSelectModal" class="type-modal hidden">
+      <div class="type-modal-backdrop" id="modalBackdrop"></div>
+      <div class="type-modal-card">
+        <h3 class="modal-title">추가할 스테이지 타입 선택</h3>
+        <p class="modal-desc">원하는 트레이닝 방식을 선택하세요.</p>
+        <div class="type-cards-grid">
+          <button class="type-select-card" data-type="countdown">
+            <div class="type-icon icon-countdown">⏱️</div>
+            <div class="type-info">
+              <div class="type-name">시간 제한 (Count Down)</div>
+              <div class="type-hint">설정한 시간에서 0초로 감소하는 표준 타이머</div>
+            </div>
+          </button>
+          <button class="type-select-card" data-type="tabata">
+            <div class="type-icon icon-tabata">🔥</div>
+            <div class="type-info">
+              <div class="type-name">타바타 (Work / Rest 세트)</div>
+              <div class="type-hint">운동 시간과 휴식 시간이 한 세트로 묶여 자동 반복</div>
+            </div>
+          </button>
+          <button class="type-select-card" data-type="countup">
+            <div class="type-icon icon-countup">📈</div>
+            <div class="type-info">
+              <div class="type-name">랩 타임 (Count Up)</div>
+              <div class="type-hint">0초부터 목표 시간까지 시간을 누적하며 측정</div>
+            </div>
+          </button>
+        </div>
+        <button id="closeModalBtn" class="btn btn-secondary btn-block">취소</button>
+      </div>
+    </div>
+
+    <!-- MODAL 2: Save Routine Modal (루틴 이름 저장) -->
+    <div id="saveRoutineModal" class="type-modal hidden">
+      <div class="type-modal-backdrop" id="saveModalBackdrop"></div>
+      <div class="type-modal-card">
+        <div class="modal-header-row">
+          <div class="modal-icon-badge">💾</div>
+          <h3 class="modal-title">현재 루틴 보관함에 저장</h3>
+        </div>
+        <p class="modal-desc">구성한 스테이지 목록을 이름과 함께 브라우저에 영구 저장합니다.</p>
+        
+        <div class="save-routine-form">
+          <label class="input-label" for="routineNameInput">루틴 이름</label>
+          <input type="text" id="routineNameInput" class="input-control modal-input" placeholder="예: 월요일 전신 불태우기, 퇴근 후 15분 타바타" maxlength="30">
+          <div class="routine-preview-badge" id="saveRoutinePreviewSummary">
+            3개 단계 · 예상 소요시간 04:00
+          </div>
+        </div>
+
+        <div class="modal-btn-row">
+          <button id="cancelSaveBtn" class="btn btn-secondary">취소</button>
+          <button id="confirmSaveBtn" class="btn btn-sport-neon">보관함에 저장하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: Routine Library Modal (루틴 보관함 목록) -->
+    <div id="libraryModal" class="type-modal hidden">
+      <div class="type-modal-backdrop" id="libraryModalBackdrop"></div>
+      <div class="type-modal-card library-modal-card">
+        <div class="library-modal-header">
+          <div>
+            <h3 class="modal-title">📁 내 루틴 보관함</h3>
+            <p class="modal-desc">저장해 둔 맞춤형 운동 루틴을 언제든 불러오세요.</p>
+          </div>
+          <button id="closeLibraryBtn" class="btn-icon-xs close-library-btn" aria-label="닫기">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Library List -->
+        <div id="libraryList" class="library-list">
+          <!-- Dynamically populated saved routines -->
+        </div>
+
+        <div class="library-footer">
+          <button id="openSaveFromLibraryBtn" class="btn btn-sport-neon btn-sm">
+            + 현재 루틴 새로 저장하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: Routine Complete Celebration Overlay Modal -->
+    <div id="completeModal" class="celebrate-modal hidden">
+      <div class="celebrate-content">
+        <div class="trophy-emoji">🏆</div>
+        <h2 class="celebrate-title">루틴 완주 성공!</h2>
+        <p class="celebrate-sub">설정한 모든 운동 스테이지를 성공적으로 마쳤습니다.</p>
+        
+        <div class="stats-summary-grid">
+          <div class="summary-card">
+            <span class="summary-label">완료 스테이지</span>
+            <span id="summaryStages" class="summary-val">3개</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">총 라운드</span>
+            <span id="summaryRounds" class="summary-val">12회</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">총 운동 시간</span>
+            <span id="summaryTime" class="summary-val">05:40</span>
+          </div>
+        </div>
+
+        <div class="celebrate-actions">
+          <button id="restartRoutineBtn" class="btn btn-sport-neon btn-lg">
+            다시 시작하기
+          </button>
+          <button id="closeCelebrateBtn" class="btn btn-secondary btn-lg">
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div id="toastNotification" class="toast-popup hidden">
+      <span id="toastIcon">✨</span>
+      <span id="toastMessage">루틴이 저장되었습니다.</span>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
