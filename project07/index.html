@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetalPulse | 실시간 글로벌 금속 시세 & 변동 추이 대시보드</title>
+  <meta name="description" content="금(Gold), 은(Silver), 구리(Copper), 플래티넘(Platinum), 팔라듐(Palladium)의 실시간 국제 시세 및 기간별 변동 추이 차트를 제공하는 전문 금속 시세 대시보드입니다.">
+  <meta name="keywords" content="금시세, 은시세, 구리시세, 플래티넘시세, 팔라듐시세, MetalpriceAPI, 국제금값, 금값전망, 금그래프">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js & Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Glow FX -->
+  <div class="bg-glow bg-glow-gold"></div>
+  <div class="bg-glow bg-glow-cyan"></div>
+  <div class="bg-glow bg-glow-copper"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-logo">
+        <div class="logo-icon-wrapper">
+          <i data-lucide="gem" class="logo-icon"></i>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Metal<span>Pulse</span></h1>
+          <p class="brand-subtitle">글로벌 귀금속 & 주요 금속 시세 모니터링</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Live Market Status -->
+        <div class="market-status-badge">
+          <span class="pulse-dot"></span>
+          <span class="status-text">실시간 시장 연동 중</span>
+        </div>
+
+        <!-- Currency Selector -->
+        <div class="control-group">
+          <label for="currencySelect" class="control-label">통화</label>
+          <div class="select-wrapper">
+            <select id="currencySelect" class="custom-select">
+              <option value="KRW" selected>KRW (₩)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="JPY">JPY (¥)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Weight Unit Selector -->
+        <div class="control-group">
+          <label for="unitSelect" class="control-label">단위</label>
+          <div class="select-wrapper">
+            <select id="unitSelect" class="custom-select">
+              <option value="oz" selected>1 Troy oz (31.1g)</option>
+              <option value="g">1 g (그램)</option>
+              <option value="don">1 돈 (3.75g)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Refresh Button -->
+        <button id="refreshBtn" class="btn-refresh" title="시세 새로고침">
+          <i data-lucide="refresh-cw" id="refreshIcon"></i>
+          <span>새로고침</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Last Updated Time & API Status Bar -->
+    <div class="info-bar">
+      <div class="info-left">
+        <i data-lucide="clock" class="info-icon"></i>
+        <span>기준 시각: <strong id="lastUpdatedTime">데이터 불러오는 중...</strong></span>
+        <span class="api-tag"><i data-lucide="shield-check" class="tag-icon"></i> MetalpriceAPI 공식 연동</span>
+      </div>
+      <div class="info-right">
+        <span id="fxRateDisplay" class="fx-rate">USD/KRW 환율: <strong>-</strong></span>
+      </div>
+    </div>
+
+    <!-- SECTION 1: Top Metal Cards Overview -->
+    <section class="overview-section" aria-labelledby="overview-heading">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="overview-heading" class="section-title">
+            <i data-lucide="layout-grid" class="title-icon"></i> 주요 금속 현재 시세
+          </h2>
+          <p class="section-desc">실시간 국제 시장 기준가 및 24시간 가격 변동률</p>
+        </div>
+        <div class="unit-badge-display">
+          표시 단위: <span id="currentUnitLabel">1 Troy oz / KRW</span>
+        </div>
+      </div>
+
+      <!-- Metal Cards Grid -->
+      <div class="metal-cards-grid" id="metalCardsContainer">
+        <!-- Cards will be dynamically injected by app.js -->
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Chart Period Controls & Filters -->
+    <section class="chart-control-section">
+      <div class="filter-bar">
+        <div class="filter-left">
+          <span class="filter-title"><i data-lucide="calendar-range" class="filter-icon"></i> 기간 선택</span>
+          <div class="period-btn-group" id="periodBtnGroup">
+            <button class="period-btn" data-period="5d">5일</button>
+            <button class="period-btn active" data-period="1w">1주일</button>
+            <button class="period-btn" data-period="1m">1개월</button>
+            <button class="period-btn" data-period="3m">3개월</button>
+            <button class="period-btn" data-period="6m">6개월</button>
+            <button class="period-btn" data-period="1y">1년</button>
+          </div>
+        </div>
+
+        <div class="filter-right">
+          <div class="chart-mode-group">
+            <span class="filter-label">차트 스타일:</span>
+            <button class="mode-btn active" id="modeAreaBtn" title="영역 차트">
+              <i data-lucide="area-chart"></i> 영역
+            </button>
+            <button class="mode-btn" id="modeLineBtn" title="라인 차트">
+              <i data-lucide="trending-up"></i> 라인
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Vertical Metal Price Charts List -->
+    <section class="charts-vertical-section" aria-labelledby="charts-heading">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="charts-heading" class="section-title">
+            <i data-lucide="bar-chart-3" class="title-icon"></i> 금속별 시세 변동 추이 차트
+          </h2>
+          <p class="section-desc">선택된 기간 동안의 각 금속별 상세 가격 변동과 고저점 통계</p>
+        </div>
+      </div>
+
+      <!-- Vertical Charts Container: 1 chart per metal stacked vertically -->
+      <div class="charts-vertical-list" id="chartsVerticalList">
+        <!-- Charts rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- Quick Metal Price Calculator & Insights -->
+    <section class="insights-section">
+      <div class="insight-card calculator-card">
+        <div class="insight-header">
+          <i data-lucide="calculator" class="insight-icon"></i>
+          <h3>금속 가치 간편 계산기</h3>
+        </div>
+        <p class="calc-desc">보유하고 계신 금속의 중량과 종류를 입력하면 현재 시세 기준 총 가치를 계산해 드립니다.</p>
+        
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="calcMetal">금속 선택</label>
+            <select id="calcMetal" class="custom-select">
+              <option value="XAU">금 (Gold)</option>
+              <option value="XAG">은 (Silver)</option>
+              <option value="XPT">플래티넘 (Platinum)</option>
+              <option value="XPD">팔라듐 (Palladium)</option>
+              <option value="XCU">구리 (Copper)</option>
+            </select>
+          </div>
+          
+          <div class="calc-field">
+            <label for="calcAmount">중량 입력</label>
+            <div class="input-with-unit">
+              <input type="number" id="calcAmount" value="10" min="0.01" step="any">
+              <select id="calcUnit" class="unit-mini-select">
+                <option value="don">돈</option>
+                <option value="g" selected>g (그램)</option>
+                <option value="oz">oz (온스)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-result-box">
+          <span class="result-label">예상 평가 금액</span>
+          <div class="result-value" id="calcResultDisplay">₩ 0</div>
+          <div class="result-sub" id="calcResultSub">-</div>
+        </div>
+      </div>
+
+      <div class="insight-card market-info-card">
+        <div class="insight-header">
+          <i data-lucide="info" class="insight-icon"></i>
+          <h3>금속 투자 가이드 & 단위 안내</h3>
+        </div>
+        <ul class="info-list">
+          <li>
+            <strong class="info-tag gold">1 Troy Ounce</strong>
+            <span>귀금속 표준 국제 거래 단위로 정확히 <strong>31.1034768 그램</strong>에 해당합니다.</span>
+          </li>
+          <li>
+            <strong class="info-tag silver">1 돈 (한국 표준)</strong>
+            <span>한국 전통 귀금속 중량 단위로 <strong>3.75 그램</strong>에 해당합니다. (1 oz ≈ 8.294돈)</span>
+          </li>
+          <li>
+            <strong class="info-tag copper">구리(Copper) 특성</strong>
+            <span>산업 전반과 전기차, 전력 인프라의 핵심 원자재로 경기 선행 지표 역할을 합니다.</span>
+          </li>
+          <li>
+            <strong class="info-tag platinum">플래티넘/팔라듐</strong>
+            <span>희소성이 높고 친환경 수소 촉매 및 자동차 배기가스 정화 촉매의 핵심 소재입니다.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <p class="footer-logo">Metal<span>Pulse</span> Dashboard</p>
+        <p class="footer-copy">© 2026 MetalPulse. Real-time Precious & Industrial Metals Market Analytics.</p>
+      </div>
+      <div class="footer-right">
+        <span class="footer-badge">Powered by MetalpriceAPI</span>
+        <span class="footer-badge">Chart.js Engine</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

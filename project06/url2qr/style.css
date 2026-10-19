@@ -1,0 +1,901 @@
+/* ==========================================================================
+   QR Studio - Premium Modern Design System
+   ========================================================================== */
+
+:root {
+  /* Color Tokens */
+  --bg-dark: #070913;
+  --bg-dark-accent: #0f1426;
+  --card-bg: rgba(18, 24, 43, 0.75);
+  --card-bg-solid: #131a30;
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-border-glow: rgba(99, 102, 241, 0.4);
+  
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.35);
+  --accent-cyan: #06b6d4;
+  --accent-purple: #8b5cf6;
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  --button-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  /* Spacing & Radii */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Pretendard', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-speed: 0.55s;
+}
+
+/* Reset & Base Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background Ambient Lights */
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+  animation: floatAmbient 18s ease-in-out infinite alternate;
+}
+
+.glow-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.6) 0%, rgba(99, 102, 241, 0) 70%);
+  top: -150px;
+  left: -100px;
+}
+
+.glow-2 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.45) 0%, rgba(6, 182, 212, 0) 70%);
+  bottom: -100px;
+  right: -80px;
+  animation-delay: -5s;
+}
+
+.glow-3 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
+  top: 40%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  animation-delay: -9s;
+}
+
+@keyframes floatAmbient {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.08); }
+  100% { transform: translateY(30px) scale(0.95); }
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   Header Style (Top Left Logo)
+   ========================================================================== */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 50;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s var(--ease-spring), opacity 0.2s ease;
+  user-select: none;
+}
+
+.logo-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.logo-img {
+  height: 38px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(99, 102, 241, 0.3));
+}
+
+.logo-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 60%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Nav Switcher: QR코드 / URL단축 */
+.nav-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(18, 24, 43, 0.85);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.nav-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-tab.active {
+  color: #ffffff;
+  background: var(--button-gradient);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-spring);
+  user-select: none;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.glass-btn:active {
+  transform: translateY(0);
+}
+
+.small-btn {
+  padding: 8px 16px;
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   Main Wrapper & Transition Architecture
+   ========================================================================== */
+.main-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   Center QR Display Section
+   ========================================================================== */
+.qr-display-section {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--anim-speed) var(--ease-spring),
+              transform var(--anim-speed) var(--ease-spring),
+              visibility var(--anim-speed);
+  z-index: 20;
+}
+
+/* QR Interactive Card */
+.qr-presentation-card {
+  position: relative;
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6),
+              0 0 0 1px rgba(255, 255, 255, 0.05),
+              0 0 40px rgba(99, 102, 241, 0.2);
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-spring),
+              box-shadow 0.35s var(--ease-spring),
+              border-color 0.35s var(--ease-smooth);
+}
+
+.qr-presentation-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 0 32px 70px -10px rgba(0, 0, 0, 0.7),
+              0 0 50px rgba(99, 102, 241, 0.35);
+}
+
+.qr-presentation-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* White QR Code Frame */
+.qr-code-frame {
+  position: relative;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+              0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrcode-inner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 240px;
+}
+
+.qrcode-inner-container canvas,
+.qrcode-inner-container img {
+  display: block !important;
+  width: 240px !important;
+  height: 240px !important;
+  border-radius: 6px;
+}
+
+/* Hover Download Pill on Card */
+.qr-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s;
+  border-radius: var(--radius-md);
+}
+
+.qr-presentation-card:hover .qr-hover-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.download-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--button-gradient);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.5);
+  transform: translateY(6px);
+  transition: transform 0.25s var(--ease-spring);
+}
+
+.qr-presentation-card:hover .download-pill {
+  transform: translateY(0);
+}
+
+.qr-card-footer {
+  margin-top: 14px;
+}
+
+.qr-click-prompt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: dotPulse 2s infinite;
+}
+
+@keyframes dotPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 14px #10b981; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Ripple Canvas for Click Flash */
+.ripple-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--radius-lg);
+  z-index: 5;
+}
+
+/* Quick Action Toolbar Below QR */
+.qr-action-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.url-preview-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  max-width: 380px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.url-preview-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.url-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.copy-hint-text {
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.primary-action-btn {
+  background: var(--button-gradient);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  color: #ffffff;
+  box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+.primary-action-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.5);
+}
+
+.secondary-action-btn {
+  padding: 10px 16px;
+}
+
+/* ==========================================================================
+   URL Input Section (Center -> Bottom Dock Transition)
+   ========================================================================== */
+.url-input-section {
+  position: absolute;
+  width: 100%;
+  max-width: 640px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 30;
+  transition: top var(--anim-speed) var(--ease-spring),
+              bottom var(--anim-speed) var(--ease-spring),
+              transform var(--anim-speed) var(--ease-spring);
+}
+
+/* INITIAL STATE: Section in Exact Center */
+body.state-initial .url-input-section {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* GENERATED STATE: Section Docked at Bottom */
+body.state-generated .url-input-section {
+  top: auto;
+  bottom: 24px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: 580px;
+}
+
+body.state-generated .qr-display-section {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Hero Header Text */
+.input-hero-header {
+  text-align: center;
+  margin-bottom: 32px;
+  max-height: 200px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease,
+              max-height 0.4s var(--ease-smooth),
+              margin-bottom 0.4s var(--ease-smooth),
+              transform 0.4s ease;
+  overflow: hidden;
+}
+
+body.state-generated .input-hero-header {
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.sparkle-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #c7d2fe;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.hero-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 75%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Dock Container */
+.input-dock-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Input Form & Glass Glow Border */
+.url-input-form {
+  position: relative;
+  width: 100%;
+}
+
+.input-glow-border {
+  position: absolute;
+  inset: -1px;
+  background: var(--accent-gradient);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.url-input-form:focus-within .input-glow-border {
+  opacity: 0.8;
+}
+
+.input-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(20, 27, 48, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-full);
+  padding: 6px 8px 6px 18px;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(255, 255, 255, 0.04);
+  z-index: 2;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+body.state-generated .input-field-wrapper {
+  background: rgba(15, 21, 38, 0.92);
+  box-shadow: 0 12px 35px -6px rgba(0, 0, 0, 0.65),
+              0 0 25px rgba(99, 102, 241, 0.2);
+}
+
+.input-prefix-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  margin-right: 12px;
+  transition: color 0.2s ease;
+}
+
+.url-input-form:focus-within .input-prefix-icon {
+  color: var(--primary);
+}
+
+.url-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 10px 0;
+}
+
+.url-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.clear-input-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.clear-input-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.submit-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--button-gradient);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--primary-glow);
+  transition: all 0.25s var(--ease-spring);
+  white-space: nowrap;
+}
+
+.submit-action-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(79, 70, 229, 0.5);
+}
+
+.submit-action-btn:active {
+  transform: translateY(1px);
+}
+
+.submit-action-btn .btn-icon {
+  transition: transform 0.2s ease;
+}
+
+.submit-action-btn:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+/* Quick Chips Tray */
+.quick-chip-tray {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 80px;
+  opacity: 1;
+  transition: opacity 0.35s ease, max-height 0.35s ease;
+}
+
+body.state-generated .quick-chip-tray {
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.chip-title {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.chips-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sample-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sample-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-1px);
+}
+
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.naver-dot { background-color: #03c75a; }
+.google-dot { background-color: #4285f4; }
+.youtube-dot { background-color: #ff0000; }
+.insta-dot { background-color: #e1306c; }
+.github-dot { background-color: #ffffff; }
+
+/* ==========================================================================
+   Toast Notification
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(24, 32, 56, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5),
+              0 0 20px rgba(99, 102, 241, 0.25);
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  animation: toastIn 0.35s var(--ease-spring) forwards;
+}
+
+.toast.toast-exit {
+  animation: toastOut 0.3s var(--ease-smooth) forwards;
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  color: #10b981;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-12px) scale(0.95); }
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 640px) {
+  .app-header {
+    padding: 0 16px;
+    height: 60px;
+  }
+  
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-desc {
+    font-size: 0.92rem;
+  }
+
+  .qr-display-section {
+    top: 40%;
+    gap: 16px;
+  }
+
+  .qrcode-inner-container,
+  .qrcode-inner-container canvas,
+  .qrcode-inner-container img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .url-input {
+    font-size: 0.95rem;
+  }
+
+  .submit-action-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  body.state-generated .url-input-section {
+    bottom: 16px;
+  }
+
+  .button-group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
